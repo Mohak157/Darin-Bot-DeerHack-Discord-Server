@@ -38,6 +38,7 @@ keep_alive()
 
 @bot.event
 async def on_ready():
+    await bot.change_presence( status=discord.Status.online, activity=discord.Game("Building DeerHack 2026 🦌"))
     print("All done and running ")
 
 @bot.command()
