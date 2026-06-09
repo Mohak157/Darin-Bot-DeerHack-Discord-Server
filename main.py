@@ -56,11 +56,10 @@ async def helpme(ctx):
 @bot.command()
 @commands.has_permissions(manage_messages=True)
 async def send(ctx,channel:discord.TextChannel,*,message:str ):
-    if message:
-        await channel.send(message)
+    files = [await attachment.to_file() for attachment in ctx.message.attachments]
+    await channel.send(message,files=files)
     
-    for attachment in ctx.message.attachments:
-        await channel.send(file=await attachment.to_file())
+  
 
     await ctx.message.add_reaction("✅")
 
