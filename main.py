@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import os
 from flask import Flask
 from threading import Thread
-
+import textwrap
 
 
 load_dotenv()
@@ -55,14 +55,20 @@ async def helpme(ctx):
 
 @bot.command()
 @commands.has_permissions(manage_messages=True)
-async def send(ctx,channel:discord.TextChannel,*,message:str ):
+async def send(ctx, channel: discord.TextChannel, *, message: str):
+
     files = [await attachment.to_file() for attachment in ctx.message.attachments]
-    await channel.send(message,files=files)
-    
-  
+
+    # Split message into 1900-char chunks (safe under Discord limit)
+    chunks = [message[i:i+1900] for i in range(0, len(message), 1900)]
+
+    for i, chunk in enumerate(chunks):
+        if i == 0:
+            await channel.send(chunk, files=files if files else None)
+        else:
+            await channel.send(chunk)
 
     await ctx.message.add_reaction("✅")
-
 
 
 
